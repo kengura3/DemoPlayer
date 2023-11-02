@@ -9,11 +9,14 @@ import UIKit
 
 class DetailViewController: UIViewController {
 
+    @IBOutlet weak var videoName: UILabel!
+    @IBOutlet weak var videoDescription: UITextView!
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
     }
+    
 
 
     /*

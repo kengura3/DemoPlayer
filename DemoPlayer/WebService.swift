@@ -13,7 +13,10 @@ struct Lesson: Decodable  {
 
 class WebService {
     func getVideos() async throws -> [Video] {
-        let (data, _) = try await URLSession.shared.data(from: URL(string: "https://fksoftware.sk/video/data.json")!)
+        let (data, response) = try await URLSession.shared.data(from: URL(string: "https://fksoftware.sk/video/data.json")!)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw NetworkError.badRequest
+        }
         return try JSONDecoder().decode(Lesson.self, from: data).lessons
     }
 }

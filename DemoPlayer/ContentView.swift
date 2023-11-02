@@ -16,7 +16,7 @@ struct ContentView: View {
         NavigationView {
             List(videoListVM.videos) { video in
                 NavigationLink {
-                    
+                    DetailView(detailViewModel: DetailViewModel(title: video.title, desc: video.description))
                 } label: {
                     HStack {
                         URLImage(url: video.thumbnail)
