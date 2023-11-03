@@ -46,11 +46,15 @@ class DetailViewController: UIViewController {
                 nextButton.isHidden = true
             }
         }
+        
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         videoDescription.adjustUITextViewHeight()
+        self.parent?.navigationItem.setRightBarButton(self.customDownloadBarButton(), animated: false)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -87,15 +91,32 @@ class DetailViewController: UIViewController {
     }
     
     private func configurePlayButton() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(startPlayingVideo))
         playButton.addGestureRecognizer(tapGesture)
         playButton.isUserInteractionEnabled = true
     }
     
-    @objc private func handleTapGesture() {
+    func customDownloadBarButton() -> UIBarButtonItem {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "icloud.and.arrow.down"), for: .normal)
+        button.setTitle("Download", for: .normal)
+        button.sizeToFit()
+        button.addTarget(self, action: #selector(startDownloadingVideo), for: UIControl.Event.touchUpInside)
+            
+        return UIBarButtonItem(customView: button)
+        
+    }
+    
+    @objc private func startPlayingVideo() {
         player?.play()
         playButton.isHidden = true
     }
+    
+    @objc func startDownloadingVideo() {
+        print("Message")
+    }
+                                                                   
+                                                                   
 
 }
 

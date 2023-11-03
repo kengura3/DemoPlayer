@@ -34,6 +34,7 @@ struct DetailView: UIViewControllerRepresentable, DetailViewProtocol {
     
     func makeUIViewController(context: Context) -> DetailViewController {
         let detailVC = UIViewControllerType(nibName: "DetailViewController", bundle: nil)
+        
         detailVC.videoURL = videoListVM.videos[selectedItem].video_url!
         detailVC.nextVideoAvalaible = nextVideoAvalaible
         detailVC.delegate = self
