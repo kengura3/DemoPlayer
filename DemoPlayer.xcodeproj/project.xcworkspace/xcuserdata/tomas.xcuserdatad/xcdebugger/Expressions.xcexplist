@@ -3,6 +3,25 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "DetailView.updateUIViewController(_:context:):DetailView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "detailViewModel.title">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "DetailView.nextVideo():DetailView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "videoListVM.videos.count">
+            </PersistentString>
+            <PersistentString
+               value = "selectedItem">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "DetailViewController.startVideo():DetailViewController.swift">
          <PersistentStrings>
             <PersistentString

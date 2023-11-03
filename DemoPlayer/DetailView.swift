@@ -6,40 +6,72 @@
 //
 
 import SwiftUI
+import AVKit
 
-struct DetailView: UIViewControllerRepresentable {
+protocol DetailViewProtocol {
+    func nextVideo()
+}
+
+struct DetailView: UIViewControllerRepresentable, DetailViewProtocol {
+        
+    @State var selectedItem : Int
+    @State var nextVideoAvalaible : Bool
+    @ObservedObject var videoListVM :  VideoListViewModel
     
-    @StateObject var detailViewModel : DetailViewModel
+    func nextVideo() {
+        guard selectedItem < videoListVM.videos.count - 1 else {
+            return
+        }
+        if selectedItem == videoListVM.videos.count - 2  {
+            nextVideoAvalaible = false
+        }
+        selectedItem = selectedItem + 1
+    }
     
+
     typealias UIViewControllerType = DetailViewController
+    
     
     func makeUIViewController(context: Context) -> DetailViewController {
         let detailVC = UIViewControllerType(nibName: "DetailViewController", bundle: nil)
-        detailVC.videoURL = detailViewModel.videoURL
-
+        detailVC.videoURL = videoListVM.videos[selectedItem].video_url!
+        detailVC.nextVideoAvalaible = nextVideoAvalaible
+        detailVC.delegate = self
         return detailVC
         
     }
     
     func updateUIViewController(_ uiViewController: DetailViewController, context: Context) {
-        uiViewController.videoName.text = detailViewModel.title
-        uiViewController.videoDescription.text = detailViewModel.desc
-        uiViewController.videoURL = detailViewModel.videoURL
+        uiViewController.videoName.text = videoListVM.videos[selectedItem].title
+        uiViewController.videoDescription.text = videoListVM.videos[selectedItem].description
+        uiViewController.videoURL = videoListVM.videos[selectedItem].video_url!
+        uiViewController.player?.replaceCurrentItem(with: AVPlayerItem(url: videoListVM.videos[selectedItem].video_url!))
+        uiViewController.nextVideoAvalaible = nextVideoAvalaible
     }
+    
+    
 }
 
-#Preview {
-    DetailView(detailViewModel: DetailViewModel(title: "Title", desc: "Description", url: URL(string: "https://fksoftware.sk/video/production_id_4887473.mp4")!))
-}
+//#Preview {
+//
+//    DetailView(selectedItem: 0, nextVideoAvalaible: true, videoListVM: VideoListViewModel())
+//
+//}
 
 class DetailViewModel : ObservableObject {
-    @Published var title : String = ""
-    @Published var desc : String = ""
-    @Published var videoURL : URL
+    @Published var detailViewData : DetailViewData
+    @Published var nextVideo : (() -> Void)?
     
-    init(title: String, desc: String, url: URL ) {
-        self.title = title
-        self.desc = desc
-        self.videoURL = url
+    init(detailViewData: DetailViewData, nextVideo: @escaping () -> Void) {
+        self.detailViewData = detailViewData
+        self.nextVideo = nextVideo
     }
+    
+}
+
+struct DetailViewData {
+    var title : String
+    var desc : String
+    var videoURL : URL?
+    
 }

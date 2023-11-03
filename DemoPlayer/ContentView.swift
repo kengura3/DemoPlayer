@@ -15,15 +15,17 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            List(videoListVM.videos) { video in
+            List(videoListVM.videos.indices, id: \.self) { index in
                 NavigationLink {
-                    DetailView(detailViewModel: DetailViewModel(title: video.title, desc: video.description, url: video.video_url! ))
+
+                    DetailView(selectedItem: index, nextVideoAvalaible: videoListVM.videos.count == (index + 1) ? false : true, videoListVM: videoListVM)
+
                 } label: {
                     HStack {
-                        URLImage(url: video.thumbnail)
+                        URLImage(url: videoListVM.videos[index].thumbnail)
                             .frame(width: 80, height: 45)
 
-                        Text(video.title)
+                        Text(videoListVM.videos[index].title)
                             .font(.body)
                     }
                 }
@@ -38,6 +40,7 @@ struct ContentView: View {
             .navigationTitle("Videá")
         }
         .preferredColorScheme(.dark)
+        
     }
 }
 

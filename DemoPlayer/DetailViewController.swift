@@ -16,23 +16,36 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var videoView: UIView!
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var playButton: UIView!
-    
     @IBAction func nextButtonAction(_ sender: UIButton) {
-        avpController.enterFullScreen(animated: true)
+        delegate?.nextVideo()
         
+        videoName.setNeedsDisplay()
     }
     
     var videoURL : URL?
-
+    var nextVideoAvalaible = true {
+        didSet {
+            if nextVideoAvalaible == false {
+                if let nextButton = nextButton {
+                    nextButton.isHidden = true
+                }
+            }
+        }
+    }
     var player: AVPlayer?
     var avpController = AVPlayerViewController()
-
+    
+    var delegate : DetailViewProtocol?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configurePlayButton()
         configureVideoPlayer()
-
-        // Do any additional setup after loading the view.
+        if nextVideoAvalaible == false {
+            if let nextButton = nextButton {
+                nextButton.isHidden = true
+            }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
