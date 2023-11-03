@@ -9,14 +9,15 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+
     @Environment(\.modelContext) private var modelContext
     @StateObject private var videoListVM = VideoListViewModel()
-
+    
     var body: some View {
         NavigationView {
             List(videoListVM.videos) { video in
                 NavigationLink {
-                    DetailView(detailViewModel: DetailViewModel(title: video.title, desc: video.description))
+                    DetailView(detailViewModel: DetailViewModel(title: video.title, desc: video.description, url: video.video_url! ))
                 } label: {
                     HStack {
                         URLImage(url: video.thumbnail)
@@ -33,6 +34,7 @@ struct ContentView: View {
                 await videoListVM.populateVideos()
             }
             .listStyle(.plain)
+            .navigationBarTitleDisplayMode(.automatic)
             .navigationTitle("Videá")
         }
         .preferredColorScheme(.dark)
