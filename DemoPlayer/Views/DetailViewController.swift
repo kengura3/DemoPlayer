@@ -83,8 +83,6 @@ class DetailViewController: UIViewController {
         avpController.player = player
         avpController.view.frame.size.height = videoView.frame.size.height
         avpController.view.frame.size.width = videoView.frame.size.width
-        avpController.delegate = self
-        
         self.videoView.addSubview(avpController.view)
         
         
