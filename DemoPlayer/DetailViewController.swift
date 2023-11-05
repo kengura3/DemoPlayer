@@ -22,7 +22,20 @@ class DetailViewController: UIViewController {
         videoName.setNeedsDisplay()
     }
     
-    var videoURL : URL?
+    var videoURL : URL? {
+        didSet {
+            if let url = videoURL {
+                let fileName = url.lastPathComponent
+                if let localURL = FileOperationManager.shared.getDocumentsDirectory(fileName: fileName) {
+                    self.player?.replaceCurrentItem(with: AVPlayerItem(url: localURL))
+                } else {
+                        self.player?.replaceCurrentItem(with: AVPlayerItem(url: url))
+                }
+                
+                self.inicializeRightNavigationButton()
+            }
+        }
+    }
     var nextVideoAvalaible = true {
         didSet {
             if nextVideoAvalaible == false {
@@ -47,14 +60,15 @@ class DetailViewController: UIViewController {
             }
         }
         
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.statusFileNotificationReceived(notification:)), name: Notification.Name.fileStatus, object: nil)
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         videoDescription.adjustUITextViewHeight()
-        self.parent?.navigationItem.setRightBarButton(self.customDownloadBarButton(), animated: false)
+        inicializeRightNavigationButton()
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -64,11 +78,9 @@ class DetailViewController: UIViewController {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
             super.viewWillTransition(to: size, with: coordinator)
-            if UIDevice.current.orientation.isLandscape {
-                
+            if UIDevice.current.orientation.isLandscape {                
                 avpController.enterFullScreen(animated: true)
-                
-                
+   
             } else {
                 avpController.exitFullScreen(animated: true)
                 avpController.dismiss(animated: true)
@@ -96,15 +108,53 @@ class DetailViewController: UIViewController {
         playButton.isUserInteractionEnabled = true
     }
     
-    func customDownloadBarButton() -> UIBarButtonItem {
+    func inicializeRightNavigationButton() {
+        if let directory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first  {
+            let fileUrl = directory.appendingPathComponent(videoURL!.lastPathComponent)
+            print(fileUrl)
+            
+            if FileManager.default.fileExists(atPath: fileUrl.path) {
+                self.parent?.navigationItem.setRightBarButton(self.customDownloadBarButton(status: .saved), animated: false)
+            } else {
+                self.parent?.navigationItem.setRightBarButton(self.customDownloadBarButton(status: .notSaved), animated: false)
+            }
+        }
+    }
+    
+    func customDownloadBarButton(status: FileOperationStatus) -> UIBarButtonItem {
+        
         let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "icloud.and.arrow.down"), for: .normal)
-        button.setTitle("Download", for: .normal)
+        
+        switch status {
+            
+        case .saved:
+            button.setImage(UIImage(systemName: "trash"), for: .normal)
+            button.setTitle("Delete", for: .normal)
+            button.addTarget(self, action: #selector(deleteVideoFile), for: UIControl.Event.touchUpInside)
+        case .downloading:
+            button.setImage(UIImage(systemName: "stop.fill"), for: .normal)
+            button.setTitle("Downloading", for: .normal)
+            button.addTarget(self, action: #selector(cancelDownloadingVideo), for: UIControl.Event.touchUpInside)
+        case .notSaved:
+            button.setImage(UIImage(systemName: "icloud.and.arrow.down"), for: .normal)
+            button.setTitle("Download", for: .normal)
+            button.addTarget(self, action: #selector(startDownloadingVideo), for: UIControl.Event.touchUpInside)
+        }
+
         button.sizeToFit()
-        button.addTarget(self, action: #selector(startDownloadingVideo), for: UIControl.Event.touchUpInside)
             
         return UIBarButtonItem(customView: button)
         
+    }
+    
+    @objc func deleteVideoFile() {
+        if let url = videoURL {
+            FileOperationManager.shared.deleteFile(url: url)
+        }
+    }
+    
+    @objc func cancelDownloadingVideo() {
+        FileOperationManager.shared.stopDownloading()
     }
     
     @objc private func startPlayingVideo() {
@@ -113,7 +163,28 @@ class DetailViewController: UIViewController {
     }
     
     @objc func startDownloadingVideo() {
-        print("Message")
+        if let url = videoURL {
+            FileOperationManager.shared.download(url: url, fileName: url.lastPathComponent)
+            
+        }
+    }
+    
+    @objc func statusFileNotificationReceived(notification: Notification) {
+        if let fileName = notification.object as? String {
+            if let url = videoURL {
+                if url.lastPathComponent == fileName {
+                    if let status = notification.userInfo?["status"] as? FileOperationStatus {
+                        DispatchQueue.main.async {
+                            self.parent?.navigationItem.setRightBarButton(self.customDownloadBarButton(status: status), animated: false)
+                            if status == .saved {
+                                self.player?.replaceCurrentItem(with: AVPlayerItem(url: url))
+                            }
+                        }
+                    }
+                }
+                
+            }
+        }
     }
                                                                    
                                                                    
@@ -156,6 +227,7 @@ extension DetailViewController: AVPlayerViewControllerDelegate {
     
     
 }
+
 
 
 

@@ -43,14 +43,11 @@ struct DetailView: UIViewControllerRepresentable, DetailViewProtocol {
     }
     
     func updateUIViewController(_ uiViewController: DetailViewController, context: Context) {
+        uiViewController.videoURL = videoListVM.videos[selectedItem].video_url
         uiViewController.videoName.text = videoListVM.videos[selectedItem].title
         uiViewController.videoDescription.text = videoListVM.videos[selectedItem].description
-        uiViewController.videoURL = videoListVM.videos[selectedItem].video_url!
-        uiViewController.player?.replaceCurrentItem(with: AVPlayerItem(url: videoListVM.videos[selectedItem].video_url!))
         uiViewController.nextVideoAvalaible = nextVideoAvalaible
     }
-    
-    
 }
 
 //#Preview {
@@ -59,20 +56,3 @@ struct DetailView: UIViewControllerRepresentable, DetailViewProtocol {
 //
 //}
 
-class DetailViewModel : ObservableObject {
-    @Published var detailViewData : DetailViewData
-    @Published var nextVideo : (() -> Void)?
-    
-    init(detailViewData: DetailViewData, nextVideo: @escaping () -> Void) {
-        self.detailViewData = detailViewData
-        self.nextVideo = nextVideo
-    }
-    
-}
-
-struct DetailViewData {
-    var title : String
-    var desc : String
-    var videoURL : URL?
-    
-}
