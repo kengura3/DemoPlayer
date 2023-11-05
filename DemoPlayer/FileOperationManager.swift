@@ -38,7 +38,7 @@ class FileOperationManager : NSObject, URLSessionDelegate, URLSessionDataDelegat
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data)
     {
-        print("Data received")
+
         writeToFile(data: data)
         
     }
@@ -65,7 +65,7 @@ class FileOperationManager : NSObject, URLSessionDelegate, URLSessionDataDelegat
         {
             if let fileHandle = FileHandle(forWritingAtPath: fileUrl.path)
             {
-                // seekToEndOfFile, writes data at the last of file(appends not override)
+                
                 fileHandle.seekToEndOfFile()
                 fileHandle.write(data)
                 fileHandle.closeFile()
@@ -78,10 +78,9 @@ class FileOperationManager : NSObject, URLSessionDelegate, URLSessionDataDelegat
         }
         else
         {
-            // if file does not exist write data for the first time
+            
             do
             {
-                print("Writing")
                 let fileName = fileUrl.lastPathComponent
                 NotificationCenter.default.post(name: Notification.Name.fileStatus, object: fileName, userInfo: ["status" : FileOperationStatus.downloading])
                 try data.write(to: fileUrl, options: .atomic)
@@ -96,6 +95,7 @@ class FileOperationManager : NSObject, URLSessionDelegate, URLSessionDataDelegat
     func stopDownloading() {
         dataTask.cancel()
         let fileName = fileUrl.lastPathComponent
+        deleteFile(url: fileUrl)
         NotificationCenter.default.post(name: Notification.Name.fileStatus, object: fileName, userInfo: ["status" : FileOperationStatus.notSaved])
     }
     
@@ -130,7 +130,4 @@ class FileOperationManager : NSObject, URLSessionDelegate, URLSessionDataDelegat
     
 }
 
-extension Notification.Name {
-    static let fileStatus = Notification.Name("FileStatus")
-    
-}
+

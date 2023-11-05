@@ -76,18 +76,6 @@ class DetailViewController: UIViewController {
         player?.pause()
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-            super.viewWillTransition(to: size, with: coordinator)
-            if UIDevice.current.orientation.isLandscape {                
-                avpController.enterFullScreen(animated: true)
-   
-            } else {
-                avpController.exitFullScreen(animated: true)
-                avpController.dismiss(animated: true)
-            }
-        }
-    
-    
     private func configureVideoPlayer() {
         
        guard let url = videoURL else { return }
@@ -191,42 +179,7 @@ class DetailViewController: UIViewController {
 
 }
 
-extension AVPlayerViewController {
-    func enterFullScreen(animated: Bool) {
-        perform(NSSelectorFromString("enterFullScreenAnimated:completionHandler:"), with: animated, with: nil)
-        
-    }
-    func exitFullScreen(animated: Bool) {
-        perform(NSSelectorFromString("exitFullScreenAnimated:completionHandler:"), with: animated, with: nil)
-    }
-}
 
-extension UITextView {
-    func adjustUITextViewHeight() {
-        self.translatesAutoresizingMaskIntoConstraints = true
-        self.sizeToFit()
-        self.isScrollEnabled = false
-    }
-}
-
-extension DetailViewController: AVPlayerViewControllerDelegate {
-
-    func playerViewController(_ playerViewController: AVPlayerViewController, willEndFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-
-        // The system pauses when returning from full screen, we need to 'resume' manually.
-        coordinator.animate(alongsideTransition: nil) { transitionContext in
-            self.avpController.player?.play()
-        }
-    }
-    
-    func playerViewController(_ playerViewController: AVPlayerViewController, willBeginFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        coordinator.animate(alongsideTransition: nil) { transitionContext in
-            self.avpController.player?.play()
-        }
-    }
-    
-    
-}
 
 
 
