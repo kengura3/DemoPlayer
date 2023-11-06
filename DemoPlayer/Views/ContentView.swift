@@ -13,6 +13,8 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @StateObject private var videoListVM = VideoListViewModel()
     
+    @State var selectedVideo = 0
+    
     var body: some View {
         NavigationView {
             List(videoListVM.videos.indices, id: \.self) { index in
@@ -29,10 +31,13 @@ struct ContentView: View {
                         .frame(width: 7)
                         .foregroundColor(.blue.opacity(0.35))
                 }
-                .background(
+                .background(alignment: .center, content: {
+                    
                     NavigationLink(destination: DetailView(selectedItem: index, nextVideoAvalaible: videoListVM.videos.count == (index + 1) ? false : true, videoListVM: videoListVM)) {}
-                        .opacity(0)
-                )
+                    .opacity(0)
+
+                })
+                
                 .accessibilityIdentifier("ListRow\(index)")
                 
                 
@@ -44,6 +49,7 @@ struct ContentView: View {
             .navigationBarTitleDisplayMode(.automatic)
             .navigationTitle("Videá")
         }
+        
         
         .preferredColorScheme(.dark)
         

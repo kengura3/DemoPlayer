@@ -23,7 +23,7 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Ca6-JW-jAT">
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="justified" translatesAutoresizingMaskIntoConstraints="NO" id="Ca6-JW-jAT">
                     <rect key="frame" x="16" y="295.66666666666674" width="361" height="479.33333333333326"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <accessibility key="accessibilityConfiguration" identifier="VideoDescription"/>

@@ -70,7 +70,12 @@ class DetailViewController: UIViewController, DetailViewControllerProtocol {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        videoDescription.adjustUITextViewHeight()
+        if (UIDevice.current.userInterfaceIdiom == .phone){
+            videoDescription.adjustUITextViewHeight()
+        } else {
+            nextButton.isHidden = true
+        }
+        
         inicializeRightNavigationButton()
         
     }
