@@ -23,6 +23,8 @@
 		C335A39A2AF54C7300344977 /* DetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C335A3992AF54C7300344977 /* DetailViewModel.swift */; };
 		C3ACB5FD2AF67555001DAF1F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3ACB5FC2AF67555001DAF1F /* Assets.xcassets */; };
 		C3ACB5FF2AF823A0001DAF1F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3ACB5FE2AF823A0001DAF1F /* Extensions.swift */; };
+		C3B0A99A2AF9539F00F0E9A3 /* DownloadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B0A9982AF9539F00F0E9A3 /* DownloadingViewController.swift */; };
+		C3B0A99B2AF9539F00F0E9A3 /* DownloadingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3B0A9992AF9539F00F0E9A3 /* DownloadingViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +64,8 @@
 		C335A3992AF54C7300344977 /* DetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = "<group>"; };
 		C3ACB5FC2AF67555001DAF1F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C3ACB5FE2AF823A0001DAF1F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		C3B0A9982AF9539F00F0E9A3 /* DownloadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadingViewController.swift; sourceTree = "<group>"; };
+		C3B0A9992AF9539F00F0E9A3 /* DownloadingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DownloadingViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,6 +170,8 @@
 				C335A3852AF39E5000344977 /* URLImage.swift */,
 				C335A3932AF3B26E00344977 /* DetailViewController.swift */,
 				C335A3942AF3B26E00344977 /* DetailViewController.xib */,
+				C3B0A9982AF9539F00F0E9A3 /* DownloadingViewController.swift */,
+				C3B0A9992AF9539F00F0E9A3 /* DownloadingViewController.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -277,6 +283,7 @@
 				C335A35F2AF38B4500344977 /* Preview Assets.xcassets in Resources */,
 				C3ACB5FD2AF67555001DAF1F /* Assets.xcassets in Resources */,
 				C335A3962AF3B26E00344977 /* DetailViewController.xib in Resources */,
+				C3B0A99B2AF9539F00F0E9A3 /* DownloadingViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,6 +319,7 @@
 				C335A3562AF38B4400344977 /* DemoPlayerApp.swift in Sources */,
 				C3ACB5FF2AF823A0001DAF1F /* Extensions.swift in Sources */,
 				C335A3952AF3B26E00344977 /* DetailViewController.swift in Sources */,
+				C3B0A99A2AF9539F00F0E9A3 /* DownloadingViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

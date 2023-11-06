@@ -9,7 +9,11 @@ import UIKit
 import AVKit
 import AVFoundation
 
-class DetailViewController: UIViewController {
+protocol DetailViewControllerProtocol {
+    func updateNavigationBarButton(status: FileOperationStatus)
+}
+
+class DetailViewController: UIViewController, DetailViewControllerProtocol {
 
     @IBOutlet weak var videoName: UILabel!
     @IBOutlet weak var videoDescription: UITextView!
@@ -117,14 +121,14 @@ class DetailViewController: UIViewController {
             button.setImage(UIImage(systemName: "trash"), for: .normal)
             button.setTitle("Delete", for: .normal)
             button.addTarget(self, action: #selector(deleteVideoFile), for: UIControl.Event.touchUpInside)
+            button.isHidden = false
         case .downloading:
-            button.setImage(UIImage(systemName: "stop.fill"), for: .normal)
-            button.setTitle("Downloading", for: .normal)
-            button.addTarget(self, action: #selector(cancelDownloadingVideo), for: UIControl.Event.touchUpInside)
+            button.isHidden = true
         case .notSaved:
             button.setImage(UIImage(systemName: "icloud.and.arrow.down"), for: .normal)
             button.setTitle("Download", for: .normal)
             button.addTarget(self, action: #selector(startDownloadingVideo), for: UIControl.Event.touchUpInside)
+            button.isHidden = false
         }
 
         button.sizeToFit()
@@ -133,14 +137,15 @@ class DetailViewController: UIViewController {
         
     }
     
+    func updateNavigationBarButton(status: FileOperationStatus) {
+        self.parent?.navigationItem.setRightBarButton(self.customDownloadBarButton(status: status), animated: false)
+    }
+    
+    
     @objc func deleteVideoFile() {
         if let url = videoURL {
             FileOperationManager.shared.deleteFile(url: url)
         }
-    }
-    
-    @objc func cancelDownloadingVideo() {
-        FileOperationManager.shared.stopDownloading()
     }
     
     @objc private func startPlayingVideo() {
@@ -149,6 +154,14 @@ class DetailViewController: UIViewController {
     }
     
     @objc func startDownloadingVideo() {
+        
+        let downloadingViewController = DownloadingViewController()
+        downloadingViewController.modalPresentationStyle = .overFullScreen
+        downloadingViewController.modalTransitionStyle = .crossDissolve
+        downloadingViewController.delegate = self
+       
+        present(downloadingViewController, animated: true)
+        
         if let url = videoURL {
             FileOperationManager.shared.download(url: url, fileName: url.lastPathComponent)
             
@@ -161,7 +174,7 @@ class DetailViewController: UIViewController {
                 if url.lastPathComponent == fileName {
                     if let status = notification.userInfo?["status"] as? FileOperationStatus {
                         DispatchQueue.main.async {
-                            self.parent?.navigationItem.setRightBarButton(self.customDownloadBarButton(status: status), animated: false)
+                            self.updateNavigationBarButton(status: status)
                             if status == .saved {
                                 self.player?.replaceCurrentItem(with: AVPlayerItem(url: url))
                             }

@@ -13,11 +13,16 @@ enum FileOperationStatus  {
     case notSaved
 }
 
-class FileOperationManager : NSObject, URLSessionDelegate, URLSessionDataDelegate
+class FileOperationManager : NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSessionDownloadDelegate
 {
     private var session: URLSession!
-    private var dataTask: URLSessionDataTask!
     private var fileUrl: URL!
+    
+    private let byteFormatter: ByteCountFormatter = {
+            let formatter = ByteCountFormatter()
+            formatter.allowedUnits = [.useKB, .useMB]
+            return formatter
+        }()
     
     static let shared = FileOperationManager()
 
@@ -28,35 +33,29 @@ class FileOperationManager : NSObject, URLSessionDelegate, URLSessionDataDelegat
         }
         fileUrl = directory.appendingPathComponent(fileName)
         session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-        
-        var request = URLRequest(url: url)
-        request.cachePolicy = .reloadIgnoringLocalCacheData
-        
-        dataTask = session.dataTask(with: request)
-        dataTask.resume()
+        session.downloadTask(with: url).resume()
+        let fileName = fileUrl.lastPathComponent
+        NotificationCenter.default.post(name: Notification.Name.fileStatus, object: fileName, userInfo: ["status" : FileOperationStatus.downloading])
     }
 
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data)
-    {
-
-        writeToFile(data: data)
-        
-    }
-
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse,
-                    completionHandler: (URLSession.ResponseDisposition) -> Void)
-    {
-        completionHandler(URLSession.ResponseDisposition.allow)
-    }
-
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?)
-    {
-        if error == nil {
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        if let data = try? Data(contentsOf: location) {
+            writeToFile(data: data)
             let fileName = fileUrl.lastPathComponent
             NotificationCenter.default.post(name: Notification.Name.fileStatus, object: fileName, userInfo: ["status" : FileOperationStatus.saved])
-            
+        } else {
+            fatalError("Cannot load the image")
         }
+        
+        
     }
+    
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+        let progress = Float(totalBytesWritten)/Float(totalBytesExpectedToWrite)
+        let fileName = fileUrl.lastPathComponent
+        NotificationCenter.default.post(name: Notification.Name.fileStatus, object: fileName, userInfo: ["status" : FileOperationStatus.downloading,"progress" : progress])
+    }
+
     
     func writeToFile(data: Data)
     {
@@ -80,9 +79,10 @@ class FileOperationManager : NSObject, URLSessionDelegate, URLSessionDataDelegat
             
             do
             {
-                let fileName = fileUrl.lastPathComponent
-                NotificationCenter.default.post(name: Notification.Name.fileStatus, object: fileName, userInfo: ["status" : FileOperationStatus.downloading])
+                
                 try data.write(to: fileUrl, options: .atomic)
+                
+                
             }
             catch
             {
@@ -92,7 +92,7 @@ class FileOperationManager : NSObject, URLSessionDelegate, URLSessionDataDelegat
     }
     
     func stopDownloading() {
-        dataTask.cancel()
+        session.invalidateAndCancel()
         let fileName = fileUrl.lastPathComponent
         deleteFile(url: fileUrl)
         NotificationCenter.default.post(name: Notification.Name.fileStatus, object: fileName, userInfo: ["status" : FileOperationStatus.notSaved])

@@ -117,9 +117,9 @@ final class DemoPlayerUITests: XCTestCase {
         
         sleep(2)
         
-        let downloadingButton = navigationBar.buttons["Downloading"]
-        XCTAssertTrue(downloadingButton.exists)
-        downloadingButton.tap()
+        let cancelButton = app/*@START_MENU_TOKEN@*/.staticTexts["Cancel"]/*[[".buttons[\"Cancel\"].staticTexts[\"Cancel\"]",".staticTexts[\"Cancel\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        XCTAssertTrue(cancelButton.exists)
+        cancelButton.tap()
         
         sleep(1)
         
@@ -148,8 +148,12 @@ final class DemoPlayerUITests: XCTestCase {
         downloadButton.tap()
         
         
-        let downloadingButton = navigationBar.buttons["Downloading"]
-        XCTAssertTrue(downloadingButton.exists)
+        let downloadingButton = navigationBar.buttons["Download"]
+        XCTAssertFalse(downloadingButton.exists)
+        let downloadingLabel = app.staticTexts["Downloading"]
+        XCTAssertTrue(downloadingLabel.exists)
+        let cancelButton = app/*@START_MENU_TOKEN@*/.staticTexts["Cancel"]/*[[".buttons[\"Cancel\"].staticTexts[\"Cancel\"]",".staticTexts[\"Cancel\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        XCTAssertTrue(cancelButton.exists)
         
         sleep(10)
         
@@ -162,7 +166,10 @@ final class DemoPlayerUITests: XCTestCase {
         let downloadButton2 = navigationBar.buttons["Download"]
         XCTAssertTrue(downloadButton2.exists)
         
+
         
+        
+                                        
     }
 
 }
