@@ -78,8 +78,8 @@ class DetailViewController: UIViewController {
     
     private func configureVideoPlayer() {
         
-       guard let url = videoURL else { return }
-       player = AVPlayer(url: url)
+        guard let url = videoURL else { return }
+        player = AVPlayer(url: url)
         avpController.player = player
         avpController.view.frame.size.height = videoView.frame.size.height
         avpController.view.frame.size.width = videoView.frame.size.width

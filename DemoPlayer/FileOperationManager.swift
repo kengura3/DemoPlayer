@@ -60,7 +60,6 @@ class FileOperationManager : NSObject, URLSessionDelegate, URLSessionDataDelegat
     
     func writeToFile(data: Data)
     {
-        // if file exists then write data
         if FileManager.default.fileExists(atPath: fileUrl.path)
         {
             if let fileHandle = FileHandle(forWritingAtPath: fileUrl.path)

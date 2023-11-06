@@ -22,20 +22,147 @@ final class DemoPlayerUITests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
+    func testNavigationsBetweenViews() throws {
         // UI tests must launch the application that they test.
+        
+       
         let app = XCUIApplication()
         app.launch()
+        
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        app.otherElements.buttons["ListRow0"].firstMatch.tap()
+        
+        var staticElement = app.staticTexts["A bird in the city"]
+        XCTAssertTrue(staticElement.exists)
+
+        
+        var actionElement = app.buttons["Next"]
+        XCTAssertTrue(actionElement.exists)
+        actionElement.tap()
+        
+        staticElement = app.staticTexts["Goldfinches eating"]
+        XCTAssertTrue(staticElement.exists)
+
+        
+        actionElement = app.buttons["Next"]
+        XCTAssertTrue(actionElement.exists)
+        actionElement.tap()
+        
+        staticElement = app.staticTexts["Small waterfall"]
+        XCTAssertTrue(staticElement.exists)
+
+        
+        actionElement = app.buttons["Next"]
+        XCTAssertTrue(actionElement.exists)
+        actionElement.tap()
+        
+        staticElement = app.staticTexts["Calming meadow"]
+        XCTAssertTrue(staticElement.exists)
+
+        
+        actionElement = app.buttons["Next"]
+        XCTAssertTrue(actionElement.exists)
+        actionElement.tap()
+        
+        staticElement = app.staticTexts["A Melodic Morning Perch"]
+        XCTAssertTrue(staticElement.exists)
+
+        
+        actionElement = app.buttons["Next"]
+        XCTAssertTrue(actionElement.exists)
+        actionElement.tap()
+        
+        staticElement = app.staticTexts["A Dog's Adventure Amidst the Trees"]
+        XCTAssertTrue(staticElement.exists)
+
+        
+        actionElement = app.buttons["Next"]
+        XCTAssertTrue(actionElement.exists)
+        actionElement.tap()
+        
+        staticElement = app.staticTexts["Forest Stream"]
+        XCTAssertTrue(staticElement.exists)
+
+        
+        actionElement = app.buttons["Next"]
+        XCTAssertFalse(actionElement.exists)
+ 
+        app.navigationBars["_TtGC7SwiftUI19UIHosting"].buttons["Videá"].tap()
+        
+        staticElement = app.staticTexts["A bird in the city"]
+        XCTAssertTrue(staticElement.exists)
+        
+        app.otherElements.buttons["ListRow1"].firstMatch.tap()
+        
+        staticElement = app.staticTexts["A bird in the city"]
+        XCTAssertTrue(staticElement.exists)
+
+        
+        actionElement = app.buttons["Next"]
+        XCTAssertTrue(actionElement.exists)
+        
+                       
     }
-
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
-            }
+    
+    func testInteruptDownloadingFile() throws {
+        let app = XCUIApplication()
+        app.launch()
+        app.collectionViews.staticTexts["ListRow3"].tap()
+        
+        let navigationBar = app.navigationBars["_TtGC7SwiftUI19UIHosting"]
+        
+        let downloadButton = navigationBar.buttons["Download"]
+        XCTAssertTrue(downloadButton.exists)
+        downloadButton.tap()
+        
+        sleep(2)
+        
+        let downloadingButton = navigationBar.buttons["Downloading"]
+        XCTAssertTrue(downloadingButton.exists)
+        downloadingButton.tap()
+        
+        sleep(1)
+        
+        let downloadButton2 = navigationBar.buttons["Download"]
+        XCTAssertTrue(downloadButton2.exists)
+        
+    }
+    
+    
+    func testDownloadingAndDeletingFile() throws {
+        let app = XCUIApplication()
+        app.launch()
+        app.collectionViews.staticTexts["ListRow0"].tap()
+        
+        let navigationBar = app.navigationBars["_TtGC7SwiftUI19UIHosting"]
+        
+        var downloadButton = navigationBar.buttons["Download"]
+        if !downloadButton.exists {
+            let deleteButton = navigationBar.buttons["Delete"]
+            XCTAssertTrue(deleteButton.exists)
+            deleteButton.tap()
         }
+        
+        downloadButton = navigationBar.buttons["Download"]
+        XCTAssertTrue(downloadButton.exists)
+        downloadButton.tap()
+        
+        
+        let downloadingButton = navigationBar.buttons["Downloading"]
+        XCTAssertTrue(downloadingButton.exists)
+        
+        sleep(10)
+        
+        let deleteButton = navigationBar.buttons["Delete"]
+        XCTAssertTrue(deleteButton.exists)
+        deleteButton.tap()
+        
+        sleep(1)
+        
+        let downloadButton2 = navigationBar.buttons["Download"]
+        XCTAssertTrue(downloadButton2.exists)
+        
+        
     }
+
 }

@@ -8,6 +8,7 @@
 import XCTest
 @testable import DemoPlayer
 
+
 final class DemoPlayerTests: XCTestCase {
 
     override func setUpWithError() throws {
@@ -18,19 +19,51 @@ final class DemoPlayerTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
+    func testNavigationbarButton() throws {
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+        let detailViewController = DetailViewController()
+        var fileStatus = FileOperationStatus.saved
+        var button = detailViewController.customDownloadBarButton(status: fileStatus)
+        
+        XCTAssert(button.title != "Delete")
+        
+        fileStatus = .downloading
+        button = detailViewController.customDownloadBarButton(status: fileStatus)
+        
+        XCTAssert(button.title != "Downloading")
+        
+        fileStatus = .notSaved
+        button = detailViewController.customDownloadBarButton(status: fileStatus)
+        
+        XCTAssert(button.title != "Download")
+       
+    }
+    
+    func testFetchImageFromURL() async throws {
+        
+        let thumbnailImageLoader = await ThumbnailImageLoader()
+
+        var didFailWithError: Error?
+        do {
+            _ = try await thumbnailImageLoader.fetchImage(URL(string: "https://wrongLink.json")!)
+            
+        } catch {
+            didFailWithError = error
+            
         }
+        
+        didFailWithError = nil
+        do {
+            _ = try await thumbnailImageLoader.fetchImage(URL(string: "https://fksoftware.sk/video/video.png")!)
+            
+        } catch {
+            didFailWithError = error
+            
+        }
+        XCTAssertNil(didFailWithError)
+        
+
+        
     }
 
 }

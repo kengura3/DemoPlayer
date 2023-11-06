@@ -16,31 +16,12 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List(videoListVM.videos.indices, id: \.self) { index in
-//                NavigationLink {
-//
-//                    DetailView(selectedItem: index, nextVideoAvalaible: videoListVM.videos.count == (index + 1) ? false : true, videoListVM: videoListVM)
-//
-//                } label: {
-//                    HStack {
-//                        URLImage(url: videoListVM.videos[index].thumbnail)
-//                            .frame(width: 80, height: 45)
-//
-//                        Text(videoListVM.videos[index].title)
-//                            .font(.body)
-//                            .accessibilityIdentifier("ListRowTitle")
-//                            
-//                    }
-//                }
-//                .tint(.blue)
-//                .accessibilityIdentifier("ListRow\(index)")
-                
                 HStack {
                     URLImage(url: videoListVM.videos[index].thumbnail)
                         .frame(width: 80, height: 45)
                         .cornerRadius(4.0)
                     Text(videoListVM.videos[index].title)
                         .font(.body)
-                        .accessibilityIdentifier("ListRowTitle")
                     Spacer()
                     Image(systemName: "chevron.right")
                         .resizable()
@@ -52,6 +33,7 @@ struct ContentView: View {
                     NavigationLink(destination: DetailView(selectedItem: index, nextVideoAvalaible: videoListVM.videos.count == (index + 1) ? false : true, videoListVM: videoListVM)) {}
                         .opacity(0)
                 )
+                .accessibilityIdentifier("ListRow\(index)")
                 
                 
                 

@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-enum NetworkError: Error {
+enum NetworkError: Error, Equatable {
     case badRequest
     case unsupportedImage
     case badUrl
